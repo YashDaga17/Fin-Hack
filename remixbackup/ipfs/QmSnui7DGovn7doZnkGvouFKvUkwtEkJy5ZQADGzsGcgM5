@@ -1,0 +1,53 @@
+pragma solidity ^0.8.7;
+
+contract HealthInsurance{
+    
+    address SmartContractOwner;
+    
+    struct person{
+        bool authorised;
+        string name;
+        uint insuranceMoney;
+    }
+    
+    mapping(address=>person) public personmapping;
+    mapping(address=>bool) public docmapping;
+    
+    constructor() public{
+        SmartContractOwner = msg.sender; 
+    }
+    
+    modifier onlySmartContractOwner(){
+        require(SmartContractOwner == msg.sender);
+        _;
+    }
+    
+    function  setDoctor(address _address) 
+    public onlySmartContractOwner{
+        require(!docmapping[_address]);
+        docmapping[_address] = true;
+    }
+    
+    function setPerson(string memory _name,uint _insuranceMoney) 
+    public onlySmartContractOwner returns (address){
+        address uid = address(bytes20(sha256(abi.encodePacked(msg.sender,block.timestamp))));
+        require(!personmapping[uid].authorised);
+        personmapping[uid].authorised = true;
+        personmapping[uid].name = _name;
+        personmapping[uid].insuranceMoney  = _insuranceMoney;
+        
+        return uid;
+    }
+    
+    function claimInsurance(address _uid,uint _insuranceMoneyUsed) 
+    public returns (string memory)
+    {
+        require(!docmapping[msg.sender]);
+        if(personmapping[_uid].insuranceMoney < _insuranceMoneyUsed){
+            revert();
+    }
+        
+        personmapping[_uid].insuranceMoney -= _insuranceMoneyUsed;
+        return "Amount debited from your insurance";
+    }
+}
