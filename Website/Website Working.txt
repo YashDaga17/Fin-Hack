@@ -1,0 +1,8 @@
+The user will have to sign up by giving basic details such as Email, 
+Full Name, Username, and Password. Upon doing this, user will be registered 
+and they can proceed to login to the website. The home page of website
+consists of three main segments - study reminder, medicine reminder 
+and a fun gaming section. Once users click on these links, they will be 
+redirected to a different pages which we've developed separately using twilio
+and Echo3d. Other sections in the website consist of Services, About Us 
+and Contact.
